@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section II Draft Overview &amp; Voting Quorum Floor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #ffffff;
+    color: #1a1a2e;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+    overflow-x: hidden;
+  }
+
+  .deck-container {
+    max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .slide {
+    display: none;
+    text-align: center;
+    width: 100%;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .slide.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Slide 1: Menu Grid */
+  .header-tag {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    background: #eef2ff;
+    color: #3b6cf6;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin: 1.25rem 0 2rem;
+    text-align: left;
+  }
+
+  .menu-item {
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+
+  .menu-item .num {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .menu-item .title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.3;
+  }
+
+  .menu-item .desc {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    line-height: 1.35;
+  }
+
+  /* Item 2 Highlight */
+  .menu-item.highlight {
+    background: #eff6ff;
+    border: 2px solid #3b6cf6;
+    box-shadow: 0 4px 14px rgba(59, 108, 246, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .menu-item.highlight .num {
+    color: #3b6cf6;
+    font-weight: 900;
+  }
+
+  .menu-item.highlight .title {
+    color: #1d4ed8;
+    font-weight: 800;
+  }
+
+  .highlight-badge {
+    display: inline-block;
+    background: #3b6cf6;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  /* Slide 2: Interactive Dots */
+  .dot-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 820px;
+    margin: 1.25rem auto 1.5rem;
+  }
+
+  .dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #3b6cf6;
+    transition: background 0.6s ease, transform 0.6s ease, opacity 0.6s ease, box-shadow 0.6s ease;
+  }
+
+  .dot.absent {
+    background: #d1d5db;
+    opacity: 0.45;
+    transform: scale(0.75);
+  }
+
+  .dot.abstain {
+    background: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+  }
+
+  .dot.vote-yes {
+    background: #dc2626;
+    box-shadow: 0 0 14px rgba(220, 38, 38, 0.5);
+    transform: scale(1.2);
+  }
+
+  .dot.vote-no {
+    background: #16a34a;
+    box-shadow: 0 0 12px rgba(22, 163, 74, 0.45);
+    transform: scale(1.15);
+  }
+
+  .dot.contrast-blue {
+    background: #3b6cf6;
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: none;
+  }
+
+  .dot.contrast-red {
+    background: #dc2626;
+    opacity: 1;
+    transform: scale(1.25);
+    box-shadow: 0 0 18px rgba(220, 38, 38, 0.6);
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    min-height: 32px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .legend-item.visible { opacity: 1; }
+  .legend-item.hidden { opacity: 0; display: none; }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-dot.blue { background: #3b6cf6; }
+  .legend-dot.gray { background: #d1d5db; opacity: 0.6; }
+  .legend-dot.gold { background: #f59e0b; }
+  .legend-dot.red { background: #dc2626; }
+  .legend-dot.green { background: #16a34a; }
+
+  .counter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .counter {
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .counter.visible { opacity: 1; }
+  .counter.hidden { opacity: 0; display: none; }
+
+  .counter-num {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .counter-num.blue { color: #3b6cf6; }
+  .counter-num.gray { color: #9ca3af; }
+  .counter-num.gold-text { color: #d97706; }
+  .counter-num.red-text { color: #dc2626; }
+  .counter-num.green-text { color: #16a34a; }
+
+  .counter-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  .narration {
+    font-size: 1.25rem;
+    font-weight: 700;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    line-height: 1.4;
+    color: #1a1a2e;
+    padding: 0 1rem;
+    white-space: pre-wrap;
+    word-spacing: 0.15em;
+  }
+
+  .punchline {
+    margin-top: 0.85rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #dc2626;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    letter-spacing: -0.02em;
+  }
+
+  .punchline.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Slide 3: The Solution */
+  .banner {
+    background: #dc2626;
+    color: #ffffff;
+    display: inline-block;
+    padding: 0.4rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+  }
+
+  .slide3-headline {
+    font-size: 2.3rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+    color: #1a1a2e;
+  }
+
+  .slide3-headline .green { color: #16a34a; }
+
+  .slide3-subtitle {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 2rem;
+  }
+
+  .rule-box {
+    background: #f0fdf4;
+    border: 3px solid #16a34a;
+    border-radius: 14px;
+    padding: 2rem 2.5rem;
+    margin: 0 auto 2rem;
+    max-width: 720px;
+  }
+
+  .rule-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #16a34a;
+    margin-bottom: 0.75rem;
+  }
+
+  .rule-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.45;
+  }
+
+  .rule-text .number {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: #16a34a;
+  }
+
+  .math-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .math-item { text-align: center; }
+
+  .math-num {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #3b6cf6;
+    line-height: 1;
+  }
+
+  .math-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  .math-symbol {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #9ca3af;
+  }
+
+  .math-num.green { color: #16a34a; }
+
+  .callback {
+    margin: 1.5rem auto 0;
+    padding: 1.25rem 1.75rem;
+    background: #fef2f2;
+    border-radius: 10px;
+    border: 2px solid #fecaca;
+    max-width: 650px;
+  }
+
+  .callback-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #dc2626;
+    margin-bottom: 0.35rem;
+  }
+
+  .callback-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #991b1b;
+    line-height: 1.45;
+  }
+
+  /* Slide 4: Timeline / Closing */
+  .timeline-container {
+    max-width: 800px;
+    margin: 1.5rem auto 2rem;
+    text-align: left;
+  }
+
+  .timeline-card {
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .timeline-card.urgent {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+
+  .timeline-date {
+    background: #3b6cf6;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    min-width: 95px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .timeline-card.urgent .timeline-date {
+    background: #16a34a;
+  }
+
+  .timeline-content h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-content p {
+    font-size: 0.88rem;
+    color: #4b5563;
+    line-height: 1.4;
+  }
+
+  .action-box {
+    background: #f8fafc;
+    border-left: 4px solid #3b6cf6;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem auto 0;
+    max-width: 800px;
+    text-align: left;
+  }
+
+  .action-box h4 {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+  }
+
+  .action-box p {
+    font-size: 0.9rem;
+    color: #334155;
+    line-height: 1.45;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 2rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  button {
+    background: #3b6cf6;
+    color: #fff;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  button.secondary {
+    background: transparent;
+    border: 2px solid #d1d5db;
+    color: #4b5563;
+  }
+
+  button.secondary:hover {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+    color: #111827;
+  }
+
+  @media (max-width: 800px) {
+    .menu-grid { grid-template-columns: 1fr; }
+    h1, .slide3-headline { font-size: 1.5rem; }
+    .dot { width: 22px; height: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck-container">
+
+  <!-- SLIDE 1: 12-ITEM OVERVIEW -->
+  <div class="slide active" id="slide-overview">
+    <div class="header-tag">Section II Working Draft &bull; Gate 1</div>
+    <h1>12 Structural Improvements &amp; Clarifications</h1>
+    <p class="subtitle">A navigational roadmap for the Section II draft distributed today</p>
+
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="num">Item 01</div>
+        <div class="title">Committee Classification</div>
+        <div class="desc">Rethinking school proportionality &amp; committee structures</div>
+      </div>
+      <div class="menu-item highlight">
+        <div class="num">Item 02 <span class="highlight-badge">DEMO</span></div>
+        <div class="title">Voting Quorum Floor</div>
+        <div class="desc">Protecting major decisions from low-participation outcomes</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 03</div>
+        <div class="title">2-Read Rule Replacement</div>
+        <div class="desc">7-day digital notice paired with a 2/3 supermajority safeguard</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 04</div>
+        <div class="title">Standing Committee Motions</div>
+        <div class="desc">Codifying standard referral &amp; collaborative academic review</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 05</div>
+        <div class="title">Due Process &amp; Accountability</div>
+        <div class="desc">Standardized recall &amp; confidence processes with clear due process</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 06</div>
+        <div class="title">Faculty Trustee Agency</div>
+        <div class="desc">Restoring post-Board reporting autonomy directly to the FA</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 07</div>
+        <div class="title">Ratification Accountability</div>
+        <div class="desc">10-day written rationale requirement for tabled/vetoed actions</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 08</div>
+        <div class="title">Constitution vs. Bylaws</div>
+        <div class="desc">Rights &amp; principles in Constitution; mechanics &amp; logistics in Bylaws</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 09</div>
+        <div class="title">Committee Self-Review</div>
+        <div class="desc">Standing committees review &amp; adapt their own mission &amp; bylaws</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 10</div>
+        <div class="title">Faculty Scope &amp; Growth Areas</div>
+        <div class="desc">Brainstorming representative faculty voice across campus</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 11</div>
+        <div class="title">Curricular Authority Routing</div>
+        <div class="desc">Level 1, 2, and 3 thresholds for CAP vs. Departmental action</div>
+      </div>
+      <div class="menu-item">
+        <div class="num">Item 12</div>
+        <div class="title">Formal Grievance Procedure</div>
+        <div class="desc">Elevating comprehensive dispute resolution to Section V</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button onclick="goToSlide('slide-dots')">Explore Item #2: Voting Quorum Floor &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE INTERACTIVE DOT ANIMATION -->
+  <div class="slide" id="slide-dots">
+    <h1>Why We Need a Voting Quorum Floor</h1>
+    <p class="subtitle">What can happen under legacy rules &mdash; a real scenario</p>
+
+    <div class="counter-bar" id="counterBar">
+      <div class="counter visible" id="ctr-total"><div class="counter-num blue">79</div><div class="counter-label">Total Faculty</div></div>
+      <div class="counter" id="ctr-absent"><div class="counter-num gray">39</div><div class="counter-label">Absent</div></div>
+      <div class="counter" id="ctr-present"><div class="counter-num blue">40</div><div class="counter-label">Present</div></div>
+      <div class="counter" id="ctr-abstain"><div class="counter-num gold-text">25</div><div class="counter-label">Abstain</div></div>
+      <div class="counter" id="ctr-yes"><div class="counter-num red-text">8</div><div class="counter-label">Voted to Eliminate</div></div>
+      <div class="counter" id="ctr-no"><div class="counter-num green-text">7</div><div class="counter-label">Voted to Keep</div></div>
+      <!-- Contrast counters (Step 5) -->
+      <div class="counter" id="ctr-decided"><div class="counter-num red-text">8</div><div class="counter-label">Decided Outcome</div></div>
+      <div class="counter" id="ctr-everyone"><div class="counter-num blue">71</div><div class="counter-label">Everyone Else</div></div>
+    </div>
+
+    <div class="legend" id="legendBar">
+      <div class="legend-item visible" id="leg-faculty"><div class="legend-dot blue"></div><span>Faculty Member</span></div>
+      <div class="legend-item" id="leg-absent"><div class="legend-dot gray"></div><span>Absent</span></div>
+      <div class="legend-item" id="leg-abstain"><div class="legend-dot gold"></div><span>Abstaining</span></div>
+      <div class="legend-item" id="leg-yes"><div class="legend-dot red"></div><span>Voted to Eliminate</span></div>
+      <div class="legend-item" id="leg-no"><div class="legend-dot green"></div><span>Voted to Keep</span></div>
+      <!-- Contrast legend (Step 5) -->
+      <div class="legend-item" id="leg-contrast-red"><div class="legend-dot red"></div><span>Decided the Outcome (8)</span></div>
+      <div class="legend-item" id="leg-contrast-blue"><div class="legend-dot blue"></div><span>Everyone Else (71)</span></div>
+    </div>
+
+    <div class="dot-grid" id="dotGrid"></div>
+
+    <div class="narration" id="narration">Meet your 79 faculty colleagues.</div>
+    <div class="punchline" id="punchline">8 votes just eliminated a program for 79 faculty.</div>
+
+    <div class="controls">
+      <button class="secondary" onclick="goToSlide('slide-overview')">&larr; 12 Items Menu</button>
+      <button id="btnNext">Next Step &rarr;</button>
+      <button id="btnReset" class="secondary">Reset</button>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE SOLUTION -->
+  <div class="slide" id="slide-solution">
+    <div class="banner">Under Our Proposal</div>
+    <div class="slide3-headline">The Voting Quorum Floor <span class="green">prevents this.</span></div>
+    <p class="slide3-subtitle">That vote would be <strong>invalid</strong>.  Here's why.</p>
+
+    <div class="rule-box">
+      <div class="rule-label">The New Rule</div>
+      <div class="rule-text">
+        With <span class="number">79</span> faculty members, at least <span class="number">40</span> votes must be cast &mdash; yes or no &mdash; for any major decision to count.
+      </div>
+      <div class="math-row">
+        <div class="math-item"><div class="math-num">79</div><div class="math-label">Full Members</div></div>
+        <div class="math-symbol">&divide;</div>
+        <div class="math-item"><div class="math-num">2</div><div class="math-label">&nbsp;</div></div>
+        <div class="math-symbol">=</div>
+        <div class="math-item"><div class="math-num">39.5</div><div class="math-label">Always Round Up</div></div>
+        <div class="math-symbol">&rarr;</div>
+        <div class="math-item"><div class="math-num green">40</div><div class="math-label">Votes Required</div></div>
+      </div>
+    </div>
+
+    <div class="callback">
+      <div class="callback-label">Remember the scenario you just saw</div>
+      <div class="callback-text">
+        Only 15 of 79 faculty voted.  Under this proposal, that vote is invalid &mdash; because 15 is far short of the 40-vote floor.  The program is protected.
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="secondary" onclick="goToSlide('slide-dots')">&larr; Back to Dots</button>
+      <button onclick="goToSlide('slide-closing')">Next Steps &amp; Timeline &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: CLOSING & NEXT STEPS -->
+  <div class="slide" id="slide-closing">
+    <div class="header-tag">Section II Review Sequence</div>
+    <h1>Next Steps &amp; Action Items</h1>
+    <p class="subtitle">Please engage, review, and help shape this draft</p>
+
+    <div class="timeline-container">
+      <div class="timeline-card">
+        <div class="timeline-date">Today</div>
+        <div class="timeline-content">
+          <h3>Gate 1 Draft Released</h3>
+          <p>Section II working draft emailed and available on OneDrive. Open for reading and inline margin comments.</p>
+        </div>
+      </div>
+
+      <div class="timeline-card">
+        <div class="timeline-date">Oct 13</div>
+        <div class="timeline-content">
+          <h3>Open Discussion &amp; Feedback</h3>
+          <p>Gov Committee Meeting (11am) &amp; FA Info Session (3:30pm in Bixby) dedicated to Section II Q&amp;A.</p>
+        </div>
+      </div>
+
+      <div class="timeline-card urgent">
+        <div class="timeline-date">Oct 15 &amp; 18</div>
+        <div class="timeline-content">
+          <h3>Review Deadlines</h3>
+          <p><strong>Oct 15:</strong> Standing Committee Chairs self-review priority deadline.<br><strong>Oct 18:</strong> Full FA margin comments deadline.</p>
+        </div>
+      </div>
+
+      <div class="timeline-card">
+        <div class="timeline-date">Oct 20 &amp; 22</div>
+        <div class="timeline-content">
+          <h3>Revised Draft &amp; Vote</h3>
+          <p><strong>Oct 20:</strong> Revised draft released with changes highlighted (Gate 3).<br><strong>Oct 22:</strong> Full FA Meeting deliberation &amp; Section II vote (Gate 4).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-box">
+      <h4>How to Participate</h4>
+      <p>Check your inbox for the OneDrive link &bull; Add comments directly in the shared draft &bull; Reach out with any questions to the Governance Committee.</p>
+    </div>
+
+    <div class="controls">
+      <button class="secondary" onclick="goToSlide('slide-solution')">&larr; Back to Solution</button>
+      <button class="secondary" onclick="goToSlide('slide-overview')">&#8634; Back to Menu (Slide 1)</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Navigation
+  function goToSlide(slideId) {
+    var slides = document.querySelectorAll('.slide');
+    for (var i = 0; i < slides.length; i++) {
+      slides[i].classList.remove('active');
+    }
+    document.getElementById(slideId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Dot Simulation Logic
+  var TOTAL = 79, ABSENT = 39, PRESENT = 40, ABSTAIN = 25, VOTE_YES = 8, VOTE_NO = 7;
+  var step = 0, dots = [];
+
+  var grid = document.getElementById('dotGrid');
+  var narration = document.getElementById('narration');
+  var punchline = document.getElementById('punchline');
+  var btnNext = document.getElementById('btnNext');
+  var btnReset = document.getElementById('btnReset');
+
+  for (var i = 0; i < TOTAL; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot';
+    grid.appendChild(d);
+    dots.push(d);
+  }
+
+  var shuffled = [];
+  for (var i = 0; i < TOTAL; i++) shuffled.push(i);
+  for (var i = shuffled.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = temp;
+  }
+
+  var absentSet = {};
+  for (var i = 0; i < ABSENT; i++) absentSet[shuffled[i]] = true;
+
+  var presentList = shuffled.slice(ABSENT);
+  var abstainSet = {};
+  for (var i = 0; i < ABSTAIN; i++) abstainSet[presentList[i]] = true;
+
+  var votingList = presentList.slice(ABSTAIN);
+  var yesSet = {};
+  for (var i = 0; i < VOTE_YES; i++) yesSet[votingList[i]] = true;
+  var noSet = {};
+  for (var i = VOTE_YES; i < VOTE_YES + VOTE_NO; i++) noSet[votingList[i]] = true;
+
+  function showEl(id) {
+    var el = document.getElementById(id);
+    if (el) { el.classList.remove('hidden'); el.classList.add('visible'); }
+  }
+
+  function hideEl(id) {
+    var el = document.getElementById(id);
+    if (el) { el.classList.remove('visible'); el.classList.add('hidden'); }
+  }
+
+  function setNarrationText(plainText) {
+    narration.style.opacity = 0;
+    setTimeout(function() {
+      narration.textContent = plainText;
+      narration.style.opacity = 1;
+    }, 250);
+  }
+
+  var dotSteps = [
+    // Step 1: Absent
+    function() {
+      var delay = 0;
+      for (var i = 0; i < dots.length; i++) {
+        if (absentSet[i]) {
+          (function(dot, d) { setTimeout(function() { dot.classList.add('absent'); }, d); })(dots[i], delay);
+          delay += 20;
+        }
+      }
+      showEl('leg-absent'); showEl('ctr-absent'); showEl('ctr-present');
+      setNarrationText("39 are absent.  40 are present \u2014 attendance quorum is met.  Business proceeds.");
+    },
+
+    // Step 2: Abstentions
+    function() {
+      var delay = 0;
+      for (var i = 0; i < dots.length; i++) {
+        if (abstainSet[i]) {
+          (function(dot, d) { setTimeout(function() { dot.classList.add('abstain'); }, d); })(dots[i], delay);
+          delay += 25;
+        }
+      }
+      showEl('leg-abstain'); showEl('ctr-abstain');
+      setNarrationText("A motion to eliminate a program is called.  25 faculty abstain \u2014 they have unanswered questions.");
+    },
+
+    // Step 3: Votes
+    function() {
+      var delay = 0;
+      for (var i = 0; i < dots.length; i++) {
+        if (yesSet[i]) {
+          (function(dot, d) { setTimeout(function() { dot.classList.add('vote-yes'); }, d); })(dots[i], delay);
+          delay += 70;
+        }
+      }
+      var afterYes = VOTE_YES * 70 + 120;
+      var delay2 = 0;
+      for (var i = 0; i < dots.length; i++) {
+        if (noSet[i]) {
+          (function(dot, d, base) { setTimeout(function() { dot.classList.add('vote-no'); }, base + d); })(dots[i], delay2, afterYes);
+          delay2 += 70;
+        }
+      }
+      showEl('leg-yes'); showEl('leg-no'); showEl('ctr-yes'); showEl('ctr-no');
+      setNarrationText("Only 15 faculty vote.  8 vote to eliminate.  7 vote to keep.  The motion passes.");
+    },
+
+    // Step 4: Punchline
+    function() {
+      punchline.classList.add('visible');
+      setNarrationText("Under legacy rules, this is a valid outcome.");
+      btnNext.textContent = 'See the Full Picture \u2192';
+    },
+
+    // Step 5: CONTRAST VIEW — 8 red, 71 blue
+    function() {
+      hideEl('leg-faculty'); hideEl('leg-absent'); hideEl('leg-abstain'); hideEl('leg-yes'); hideEl('leg-no');
+      hideEl('ctr-total'); hideEl('ctr-absent'); hideEl('ctr-present'); hideEl('ctr-abstain'); hideEl('ctr-yes'); hideEl('ctr-no');
+
+      showEl('leg-contrast-red'); showEl('leg-contrast-blue');
+      showEl('ctr-decided'); showEl('ctr-everyone');
+
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].className = 'dot';
+        if (yesSet[i]) {
+          dots[i].classList.add('contrast-red');
+        } else {
+          dots[i].classList.add('contrast-blue');
+        }
+      }
+
+      punchline.classList.remove('visible');
+      setNarrationText("8 people made this decision for all 79 of your colleagues.");
+      btnNext.textContent = 'The Solution \u2192';
+
+      setTimeout(function() {
+        punchline.classList.add('visible');
+      }, 600);
+    },
+
+    // Step 6: Transition to Slide 3 (Solution)
+    function() {
+      goToSlide('slide-solution');
+    }
+  ];
+
+  btnNext.addEventListener('click', function() {
+    if (step < dotSteps.length) {
+      dotSteps[step]();
+      step++;
+      if (step < dotSteps.length && step < 4) {
+        btnNext.textContent = step === 3 ? 'Show the Problem \u2192' : 'Next Step \u2192';
+      }
+    }
+  });
+
+  btnReset.addEventListener('click', function() {
+    step = 0;
+    for (var i = 0; i < dots.length; i++) dots[i].className = 'dot';
+
+    var legends = document.querySelectorAll('#legendBar .legend-item');
+    for (var i = 0; i < legends.length; i++) {
+      legends[i].classList.remove('visible');
+      legends[i].classList.remove('hidden');
+    }
+    document.getElementById('leg-faculty').classList.add('visible');
+
+    var counters = document.querySelectorAll('#counterBar .counter');
+    for (var i = 0; i < counters.length; i++) {
+      counters[i].classList.remove('visible');
+      counters[i].classList.remove('hidden');
+    }
+    document.getElementById('ctr-total').classList.add('visible');
+
+    punchline.classList.remove('visible');
+    btnNext.textContent = 'Next Step \u2192';
+    setNarrationText('Meet your 79 faculty colleagues.');
+  });
+</script>
+
+</body>
+</html>
